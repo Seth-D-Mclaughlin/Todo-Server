@@ -1,5 +1,5 @@
 const sequelize = require("../db");
-const { DataTypes } = require("sequelize/types");
+
 
 module.exports = (sequelize, DataTypes) =>{
     const Task = sequelize.define('task',{
@@ -20,7 +20,10 @@ module.exports = (sequelize, DataTypes) =>{
             allowNull:true
         },
         date:{
-            type: DateTypes.DATEONLY
+            type: DataTypes.INTEGER
+        },
+        owner: {
+            type: DataTypes.INTEGER
         }
     })
     return Task;

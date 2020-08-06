@@ -1,19 +1,23 @@
 const router = require("./taskcontroller");
-
-let express = require("express").Router();
 let User = require("../db").import("../models/user");
+let jwt = require("jsonwebtoken");
+let bcrypt = require("bcryptjs");
 
 //User Sign up
 router.post("/create", function (req, res) {
   User.create({
     firstName: req.body.user.firstName,
     email: req.body.user.email,
-    password: req.body.user.password,
+    password: bcrypt.hashSync(req.body.user.password, 13),
   })
     .then(function createSuccess(user) {
-      // Update code
+      let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: 60 * 60 * 24,
+      });
       res.json({
         user: user,
+        message: "User succesfully created!",
+        sessionToken: token,
       });
     })
     .catch((err) => res.status(500).json({ error: err }));
@@ -28,8 +32,22 @@ router.post("/login", function (req, res) {
   })
     .then(function loginSuccess(user) {
       if (user) {
-        res.status(200).json({
-          user: user,
+        bcrypt.compare(req.body.user.password, user.password, function (
+          err,
+          matches
+        ) {
+          if (matches) {
+            let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+              expiresIn: 60 * 60 * 24
+            });
+            res.status(200).json({
+              user: user,
+              message: "User succesfully logged in!",
+              sessionToken: token,
+            })
+          }else{
+            res.status(502).send({error: "Login Failed"});
+          }
         });
       } else {
         res.status(500).json({ error: "User does not exist." });
