@@ -1,7 +1,7 @@
-const router = require("./taskcontroller");
-let User = require("../db").import("../models/user");
-let jwt = require("jsonwebtoken");
-let bcrypt = require("bcryptjs");
+const router = require("express").Router();
+const User = require("../db").import("../models/user");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 //User Sign up
 router.post("/create", function (req, res) {
@@ -14,10 +14,11 @@ router.post("/create", function (req, res) {
       let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 24,
       });
+      
       res.json({
         user: user,
         message: "User succesfully created!",
-        sessionToken: token,
+        sessionToken: token
       });
     })
     .catch((err) => res.status(500).json({ error: err }));

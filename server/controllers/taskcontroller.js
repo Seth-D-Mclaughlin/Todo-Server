@@ -1,7 +1,7 @@
-let express = require('express');
+//let express = require('express');
 const validateSession = require('../middleware/validate-session');
-let Task = require('../db').import('../models/task');
-let router = express.Router();
+const Task = require('../db').import('../models/task');
+const router = express.Router();
 
 //Practice route
 // *****************************
@@ -11,8 +11,15 @@ router.get('/practice', function(req, res){
 // *****************************
 
 
-// Task Create
+// Get all Tasks
+router.get("/", (req, res) =>{
+    Task.findAll()
+        .then(tasks => res.status(200).json(tasks))
+        .catch(err => res.status(500).json({error : err}))
+});
 
+
+// Task Create
 router.post('/create', validateSession, (req, res) =>{
     const taskEntry = {
         title: req.body.task.title,
@@ -27,12 +34,6 @@ router.post('/create', validateSession, (req, res) =>{
     .catch(err => res.status(500).json({error: err}))
 })
 
-// Get all Tasks
-router.get("/", (req, res) =>{
-    Task.findAll()
-        .then(tasks => res.status(200).json(tasks))
-        .catch(err => res.status(500).json({error : err}))
-});
 
 // Get tasks by User
 router.get("/mine", validateSession, (req, res)=>{
@@ -42,5 +43,30 @@ router.get("/mine", validateSession, (req, res)=>{
     })
         .then(tasks => res.status(200).json(tasks))
         .catch(err => res.status(500).json({error : err}))
+})
+
+// Get Entries by Title
+router.get('/:title', function(req,res){
+    Task.findOne({
+        where: {title: req.params.title}
+    })
+    .then(tasks => res.status(200).json(tasks))
+    .catch(err => res.status(500).json({error: err}))
+});
+
+//! Update by ID
+router.put('/:id',(req, res)=>{
+    Task.update(req.body, {where: {id:req.params.id}})
+    .then(task => res.status(200).json(task))
+    .catch(err => res.status(500).json({error: err}))
+})
+
+//! Delete
+router.delete('/:id', (req, res) =>{
+    Task.destroy({
+        where: {id: req.params.id}
+    })
+    .then(task => res.status(200).json(task))
+    .catch(err => res.status(500).json({error: err}))
 })
 module.exports = router
