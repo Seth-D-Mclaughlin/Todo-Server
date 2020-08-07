@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('Todo-list', 'postgres', 'skywalker',{
+const sequelize = new Sequelize('Todo-list', 'postgres', process.env.PASS,{
     host: 'localhost',
     dialect: 'postgres'
 });
