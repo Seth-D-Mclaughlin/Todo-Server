@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('Todo-list', 'postgres', process.env.PASS,{
+const sequelize = new Sequelize('Todo-list', 'postgres', 'Opensesame!2345',{
     host: 'localhost',
     dialect: 'postgres'
 });

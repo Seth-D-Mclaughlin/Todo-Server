@@ -20,10 +20,11 @@ module.exports = (sequelize, DataTypes) =>{
             allowNull:true
         },
         date:{
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
         },
         owner: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull:true
         }
     })
     return Task;

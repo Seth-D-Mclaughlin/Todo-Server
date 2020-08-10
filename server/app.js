@@ -11,6 +11,9 @@ sequelize.sync()
 // sequelize.sync({force: true})
 app.use(express.json()); 
 
+//added header require
+app.use(require('./middleware/headers'));
+
 // Exposed Route
 app.use('/user', user);
 
