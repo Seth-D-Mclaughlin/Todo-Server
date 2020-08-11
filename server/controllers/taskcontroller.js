@@ -1,4 +1,4 @@
-//let express = require('express');
+let express = require('express');
 const validateSession = require('../middleware/validate-session');
 const Task = require('../db').import('../models/task');
 const router = express.Router();
